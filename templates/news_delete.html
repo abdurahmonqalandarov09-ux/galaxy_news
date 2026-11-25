@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Удалить новость{% endblock %}
+
+{% block content %}
+{% url 'news_detail' news.id as detail_url %}
+<section class="panel panel-narrow">
+  <h1>Удалить новость?</h1>
+  <p class="confirm-name">{{ news.title }}</p>
+  <p class="muted">Действие нельзя отменить.</p>
+  <form method="post" class="form-actions">
+    {% csrf_token %}
+    <button class="btn btn-red" type="submit">Да, удалить</button>
+    <a class="btn" href="{{ detail_url|default:'/' }}">Отмена</a>
+  </form>
+</section>
+{% endblock %}

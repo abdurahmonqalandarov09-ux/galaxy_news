@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{# Одна страница для создания и правки: при создании news равно None #}
+{% block title %}{% if news %}Правка новости{% else %}Новая новость{% endif %}{% endblock %}
+
+{% block content %}
+{% url 'news_list' as list_url %}
+<section class="panel">
+  <h1>{% if news %}Правка новости{% else %}Новая новость{% endif %}</h1>
+  <p class="muted">Заполните заголовок и текст. Абзацы разделяйте пустой строкой.</p>
+
+  <form class="stack" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="field">
+      <label class="label" for="id-title">Заголовок</label>
+      <input class="input" id="id-title" name="title" type="text" maxlength="200" required value="{{ news.title|default:'' }}">
+    </div>
+    <div class="field">
+      <label class="label" for="id-text">Текст</label>
+      <textarea class="textarea" id="id-text" name="text" required>{{ news.text|default:'' }}</textarea>
+    </div>
+    <div class="field">
+      <label class="label" for="id-image">Картинка</label>
+      <input class="input" id="id-image" name="image" type="file" accept="image/*">
+      <span class="hint">{% if news.image %}Сейчас загружена: {{ news.image.name }}. Выберите новый файл, чтобы заменить.{% else %}Необязательно.{% endif %}</span>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{% if news %}Сохранить{% else %}Опубликовать{% endif %}</button>
+      {% if list_url %}<a class="btn" href="{{ list_url }}">Отмена</a>{% endif %}
+    </div>
+  </form>
+</section>
+{% endblock %}

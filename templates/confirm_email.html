@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{# username необязателен: если view его передаёт, поле имени не показываем #}
+{% block title %}Подтверждение почты{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <div class="panel panel-narrow">
+    <h1>Введите код</h1>
+    <p class="muted">Шесть цифр из письма. Если письма нет, проверьте папку «Спам».</p>
+    <form class="stack" method="post">
+      {% csrf_token %}
+      {% if username %}
+      <p class="confirm-name">{{ username }}</p>
+      <input type="hidden" name="username" value="{{ username }}">
+      {% else %}
+      <div class="field">
+        <label class="label" for="id-username">Имя пользователя</label>
+        <input class="input" id="id-username" name="username" type="text" autocomplete="username" required>
+      </div>
+      {% endif %}
+      <div class="field">
+        <label class="label" for="id-code">Код из письма</label>
+        <input class="input code-input" id="id-code" name="code" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Подтвердить</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Новости{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Новости</h1>
+    <p>{% if query %}Результаты поиска: «{{ query }}»{% else %}Свежие материалы редакции.{% endif %}</p>
+  </div>
+  <form class="search" method="get" role="search">
+    <label class="sr-only" for="q">Поиск по новостям</label>
+    <input class="input" id="q" name="q" type="search" value="{{ query|default:'' }}" placeholder="Поиск по новостям">
+    <button class="btn btn-primary" type="submit">Найти</button>
+  </form>
+</div>
+
+{% for n in news %}{% if forloop.first %}
+{% url 'news_detail' n.id as lead_url %}
+{% url 'news_update' n.id as lead_edit %}
+<article class="lead">
+  <a class="media{% if not n.image %} media-none{% endif %}" href="{{ lead_url|default:'#' }}" tabindex="-1" aria-hidden="true">
+    {% if n.image %}<img src="{{ n.image.url }}" alt="">{% else %}{{ n.title|first|upper }}{% endif %}
+  </a>
+  <div>
+    <div class="meta"><b>{{ n.created_at|date:"j E Y" }}</b><span>{{ n.author.username }}</span></div>
+    <h2><a href="{{ lead_url|default:'#' }}">{{ n.title }}</a></h2>
+    <p class="excerpt">{{ n.text|truncatewords:45 }}</p>
+    {% if is_editor and lead_edit %}<div class="card-tools"><a class="btn btn-sm" href="{{ lead_edit }}">Изменить</a></div>{% endif %}
+  </div>
+</article>
+{% endif %}{% endfor %}
+
+<div class="grid">
+  {% for n in news %}{% if not forloop.first %}
+    {% include '_news_card.html' with news=n is_editor=is_editor %}
+  {% endif %}{% endfor %}
+</div>
+
+{% if not news %}
+<div class="empty">
+  <strong>{% if query %}Ничего не найдено{% else %}Новостей пока нет{% endif %}</strong>
+  <p>{% if query %}Попробуйте другое слово или очистите поиск.{% else %}Как только редактор опубликует новость, она появится здесь.{% endif %}</p>
+</div>
+{% endif %}
+{% endblock %}

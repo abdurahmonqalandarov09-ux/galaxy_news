@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+{% url 'login' as login_url %}
+<section class="auth">
+  <div class="panel panel-narrow">
+    <h1>Регистрация</h1>
+    <p class="muted">Мы отправим код подтверждения на вашу почту.</p>
+    <form class="stack" method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label class="label" for="id-username">Имя пользователя</label>
+        <input class="input" id="id-username" name="username" type="text" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label class="label" for="id-email">Почта</label>
+        <input class="input" id="id-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label class="label" for="id-password">Пароль</label>
+        <input class="input" id="id-password" name="password" type="password" autocomplete="new-password" required>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Получить код</button>
+        {% if login_url %}<a class="btn" href="{{ login_url }}">Уже есть аккаунт</a>{% endif %}
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

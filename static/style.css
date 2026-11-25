@@ -1,0 +1,181 @@
+/* =====================================================================
+   Сводка: сайт новостей
+   Цвета и шрифты лежат в разделе 1: меняй их там, остальное подхватится.
+   Подключение: <link rel="stylesheet" href="{% static 'style.css' %}">
+   Шрифты: Archivo (заголовки и интерфейс), Source Serif 4 (текст новостей), Google Fonts в base.html.
+   ===================================================================== */
+
+/* ---------- 1. Цвета и шрифты ---------- */
+:root {
+  color-scheme: light;
+  --paper: #f5f6f3;          /* газетная бумага */
+  --sheet: #ffffff;
+  --ink: #12161a;
+  --ink-dim: #5b646d;
+  --rule: #c9cec9;           /* тонкие линейки */
+  --rule-strong: #12161a;
+  --marker: #ffe14a;         /* жёлтый маркер: роль редактора */
+  --marker-deep: #c9a800;
+  --red: #d8281f;            /* срочное, ошибки, удаление */
+  --blue: #1d4ed8;           /* ссылки */
+  --f-head: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --f-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
+
+/* ---------- 2. Основа ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--f-head); -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; font-family: var(--f-head); font-weight: 800; line-height: 1.08; letter-spacing: -.01em; }
+h1 { font-size: clamp(2rem, 1.2rem + 3vw, 3.4rem); }
+h2 { font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); }
+h3 { font-size: 1.3rem; }
+p { margin: 0; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 1.25rem; }
+main.wrap { flex: 1; padding-top: 2rem; padding-bottom: 4rem; }
+.muted { color: var(--ink-dim); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; padding: .6rem 1rem; background: var(--marker); font-weight: 700; }
+.skip:focus { top: 1rem; }
+
+/* ---------- 3. Шапка ---------- */
+.masthead { background: var(--sheet); border-bottom: 3px solid var(--rule-strong); }
+.masthead-in { display: flex; align-items: center; gap: 1.5rem; min-height: 4.2rem; }
+.brand { font: 900 1.9rem/1 var(--f-head); letter-spacing: -.03em; text-decoration: none; }
+.brand span { color: var(--red); }
+.nav { display: flex; gap: .3rem; margin-right: auto; }
+.nav a { padding: .4rem .7rem; text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
+.nav a:hover { border-color: var(--rule); }
+.nav a.is-active { border-color: var(--ink); }
+.user-bar { display: flex; align-items: center; gap: .6rem; }
+.who { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; }
+.avatar { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 700; }
+.role { padding: .1rem .5rem; border: 1.5px solid var(--ink); font: 700 .78rem var(--f-head); }
+.role-editor { background: var(--marker); }
+
+/* полоса редактора: видна только группе Editors */
+.editor-bar { background: var(--marker); border-bottom: 2px solid var(--ink); }
+.editor-bar .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding-top: .5rem; padding-bottom: .5rem; font-weight: 600; font-size: .95rem; }
+
+/* ---------- 4. Кнопки и формы ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: .6rem 1.1rem; border: 2px solid var(--ink); background: var(--sheet); color: var(--ink);
+  font: 700 .95rem/1.1 var(--f-head); text-decoration: none; cursor: pointer;
+  transition: transform .08s, box-shadow .08s, background-color .12s;
+}
+.btn:hover { background: var(--paper); }
+.btn-primary { background: var(--ink); color: #fff; box-shadow: 3px 3px 0 var(--marker-deep); }
+.btn-primary:hover { background: #000; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--marker-deep); }
+.btn-sm { padding: .35rem .7rem; font-size: .85rem; border-width: 1.5px; }
+.btn-danger { color: var(--red); border-color: var(--red); }
+.btn-danger:hover { background: var(--red); color: #fff; }
+.btn-red { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-marker { background: var(--marker); }
+
+.field { display: grid; gap: .35rem; }
+.label { font-weight: 700; font-size: .92rem; }
+.hint { font-size: .85rem; color: var(--ink-dim); }
+.input, .textarea {
+  width: 100%; padding: .7rem .8rem; border: 2px solid var(--ink); border-radius: 0;
+  background: var(--sheet); color: var(--ink); font: 400 1rem/1.4 var(--f-head);
+}
+.textarea { min-height: 16rem; font-family: var(--f-text); font-size: 1.05rem; line-height: 1.6; resize: vertical; }
+.input:focus, .textarea:focus { outline: none; box-shadow: 4px 4px 0 var(--marker); }
+.input[type=file] { padding: .5rem; }
+.form-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+
+/* ---------- 5. Сообщения, пустые страницы ---------- */
+.messages { display: grid; gap: .5rem; margin-bottom: 1.5rem; }
+.msg { padding: .7rem 1rem; border: 2px solid var(--ink); border-left-width: 8px; background: var(--sheet); font-weight: 600; }
+.msg-success { border-left-color: #1a9e55; }
+.msg-error { border-left-color: var(--red); }
+.empty { padding: 3rem 1.5rem; text-align: center; border: 2px dashed var(--rule); color: var(--ink-dim); }
+.empty strong { display: block; margin-bottom: .3rem; font: 800 1.4rem var(--f-head); color: var(--ink); }
+
+/* ---------- 6. Список новостей ---------- */
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem 2rem; padding-bottom: 1rem; margin-bottom: 1.8rem; border-bottom: 3px solid var(--rule-strong); }
+.page-head p { margin-top: .4rem; color: var(--ink-dim); }
+.search { display: flex; }
+.search .input { width: min(22rem, 60vw); border-right: 0; }
+.search .btn { border-left-width: 2px; }
+
+.lead { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2rem; padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.lead .media { aspect-ratio: 16 / 10; }
+.lead h2 { font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3rem); margin: .7rem 0 1rem; }
+.lead h2 a { text-decoration: none; }
+.lead h2 a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+.lead .excerpt { font-size: 1.2rem; }
+
+.grid { display: grid; gap: 2.2rem 1.8rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.card { display: grid; align-content: start; gap: .7rem; padding-top: 1rem; border-top: 3px solid var(--rule-strong); }
+.card h3 a { text-decoration: none; }
+.card h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.card .media { aspect-ratio: 3 / 2; margin-bottom: .3rem; }
+
+.media { position: relative; display: block; overflow: hidden; background: var(--ink); }
+.media img { width: 100%; height: 100%; object-fit: cover; }
+/* если у новости нет картинки: полосатая заглушка с буквой */
+.media-none {
+  display: grid; place-items: center; color: var(--marker); font: 900 5rem/1 var(--f-head);
+  background: repeating-linear-gradient(135deg, #1b2127 0 14px, #12161a 14px 28px);
+}
+.meta { display: flex; flex-wrap: wrap; gap: .1rem .8rem; font: 600 .85rem var(--f-head); color: var(--ink-dim); }
+.meta b { color: var(--ink); }
+.excerpt { font-family: var(--f-text); color: #2b3238; }
+.card-tools { display: flex; gap: .5rem; margin-top: .3rem; }
+
+/* ---------- 7. Страница новости ---------- */
+.back { display: inline-block; margin-bottom: 1.4rem; font-weight: 700; text-decoration: none; color: var(--ink-dim); }
+.back:hover { color: var(--ink); }
+.article { max-width: 46rem; margin: 0 auto; }
+.article h1 { margin: .8rem 0 1.1rem; }
+.article .meta { padding-bottom: 1rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--rule); }
+.article .media { aspect-ratio: 16 / 9; margin: 0 -1rem 1.8rem; }
+.article-body { font: 400 1.2rem/1.75 var(--f-text); }
+.article-body p + p { margin-top: 1.2em; }
+.article-tools { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2.2rem; padding: 1rem; background: var(--marker); border: 2px solid var(--ink); }
+.article-tools span { flex: 1 1 100%; font-weight: 700; font-size: .9rem; }
+
+/* ---------- 8. Формы на отдельной странице, вход, профиль ---------- */
+.panel { width: 100%; max-width: 40rem; margin: 0 auto; padding: 1.8rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--rule); }
+.panel h1 { font-size: clamp(1.8rem, 1.3rem + 1.6vw, 2.4rem); margin-bottom: .6rem; }
+.panel-narrow { max-width: 26rem; }
+.panel > .muted { margin-bottom: 1.2rem; }
+.stack { display: grid; gap: 1.1rem; }
+.auth { display: grid; justify-items: center; padding: 1.5rem 0; }
+.profile-row { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--rule); }
+.profile-row dt { color: var(--ink-dim); }
+.profile-row dd { margin: 0; font-weight: 700; text-align: right; }
+.profile dl { margin: 1.2rem 0 0; }
+.confirm-name { padding: .6rem .8rem; border: 2px dashed var(--ink); font-weight: 700; margin-bottom: 1.2rem; }
+.code-input { max-width: 12rem; font: 800 1.8rem/1 var(--f-head); letter-spacing: .3em; text-align: center; }
+
+/* ---------- 9. Подвал ---------- */
+.footer { border-top: 3px solid var(--rule-strong); background: var(--sheet); }
+.footer .wrap { padding-top: 1.2rem; padding-bottom: 1.2rem; color: var(--ink-dim); font-size: .9rem; }
+
+/* ---------- 10. Адаптив ---------- */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lead { grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
+}
+@media (max-width: 680px) {
+  .masthead-in { flex-wrap: wrap; gap: .4rem 1rem; padding: .7rem 0; }
+  .nav { order: 3; flex-basis: 100%; overflow-x: auto; margin: 0; }
+  .user-bar { margin-left: auto; }
+  .who .name { display: none; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .article .media { margin-left: -1.25rem; margin-right: -1.25rem; }
+  .panel { padding: 1.2rem; box-shadow: 4px 4px 0 var(--rule); }
+  .search { width: 100%; }
+  .search .input { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

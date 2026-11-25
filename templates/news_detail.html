@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block content %}
+{% url 'news_list' as list_url %}
+{% url 'news_update' news.id as edit_url %}
+{% url 'news_delete' news.id as delete_url %}
+<a class="back" href="{% if list_url %}{{ list_url }}{% else %}/{% endif %}">← Все новости</a>
+
+<article class="article">
+  <div class="meta"><b>{{ news.created_at|date:"j E Y, H:i" }}</b><span>Автор: {{ news.author.username }}</span></div>
+  <h1>{{ news.title }}</h1>
+  {% if news.image %}<div class="media"><img src="{{ news.image.url }}" alt=""></div>{% endif %}
+  <div class="article-body">{{ news.text|linebreaks }}</div>
+
+  {% if is_editor %}
+  <div class="article-tools">
+    <span>Инструменты редактора</span>
+    {% if edit_url %}<a class="btn btn-sm" href="{{ edit_url }}">Изменить</a>{% endif %}
+    {% if delete_url %}<a class="btn btn-sm btn-danger" href="{{ delete_url }}">Удалить</a>{% endif %}
+  </div>
+  {% endif %}
+</article>
+{% endblock %}

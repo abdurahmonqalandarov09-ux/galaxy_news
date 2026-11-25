@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Страница не найдена{% endblock %}
+
+{% block content %}
+{% url 'news_list' as list_url %}
+<div class="empty">
+  <strong>Такой страницы нет</strong>
+  <p>Возможно, новость удалили или адрес набран с ошибкой.</p>
+  {% if list_url %}<p style="margin-top:1rem"><a class="btn btn-primary" href="{{ list_url }}">К новостям</a></p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+{% url 'registration' as register_url %}
+<section class="auth">
+  <div class="panel panel-narrow">
+    <h1>Вход</h1>
+    <p class="muted">Войдите, чтобы читать новости. Редакторы видят инструменты правки.</p>
+    <form class="stack" method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label class="label" for="id-username">Имя пользователя</label>
+        <input class="input" id="id-username" name="username" type="text" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label class="label" for="id-password">Пароль</label>
+        <input class="input" id="id-password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Войти</button>
+        {% if register_url %}<a class="btn" href="{{ register_url }}">Создать аккаунт</a>{% endif %}
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

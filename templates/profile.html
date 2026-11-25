@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+{% url 'news_list' as list_url %}
+{% url 'news_create' as create_url %}
+<section class="panel panel-narrow profile">
+  <h1>Профиль</h1>
+  <dl>
+    <div class="profile-row"><dt>Имя</dt><dd>{{ user.username }}</dd></div>
+    <div class="profile-row"><dt>Почта</dt><dd>{{ user.email|default:"не указана" }}</dd></div>
+    <div class="profile-row"><dt>Роль</dt><dd>{% if is_editor %}<span class="role role-editor">Редактор</span>{% else %}<span class="role">Читатель</span>{% endif %}</dd></div>
+  </dl>
+  <div class="form-actions">
+    {% if list_url %}<a class="btn btn-primary" href="{{ list_url }}">Читать новости</a>{% endif %}
+    {% if is_editor and create_url %}<a class="btn btn-marker" href="{{ create_url }}">Написать новость</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

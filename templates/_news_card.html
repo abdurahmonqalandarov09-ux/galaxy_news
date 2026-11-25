@@ -1,0 +1,12 @@
+{# Карточка новости. Вставка: include '_news_card.html' with news=n is_editor=is_editor #}
+{% url 'news_detail' news.id as detail_url %}
+{% url 'news_update' news.id as edit_url %}
+<article class="card">
+  <a class="media{% if not news.image %} media-none{% endif %}" href="{{ detail_url|default:'#' }}" tabindex="-1" aria-hidden="true">
+    {% if news.image %}<img src="{{ news.image.url }}" alt="">{% else %}{{ news.title|first|upper }}{% endif %}
+  </a>
+  <div class="meta"><b>{{ news.created_at|date:"j E Y" }}</b><span>{{ news.author.username }}</span></div>
+  <h3><a href="{{ detail_url|default:'#' }}">{{ news.title }}</a></h3>
+  <p class="excerpt">{{ news.text|truncatewords:24 }}</p>
+  {% if is_editor and edit_url %}<div class="card-tools"><a class="btn btn-sm" href="{{ edit_url }}">Изменить</a></div>{% endif %}
+</article>
